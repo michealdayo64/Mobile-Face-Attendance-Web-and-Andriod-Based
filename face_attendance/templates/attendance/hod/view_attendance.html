@@ -1,0 +1,221 @@
+{% extends 'base.html' %}
+{% block page_title %}
+View Attendance
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+                    <div class="row">
+              <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <h3 class="card-title">View Attendance</h3>
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+                <div class="card-body">
+                   <div class="form-inline mr-sm-2">
+                    <label class="mr-sm-2">course Code </label>
+                    <select class="form-control" name="courseText" id="course">
+                        {% for code in courses  %}
+                          <option value="{{ code.id }}">{{ code.course_code }}</option>
+                        {% endfor %}
+                    </select>
+                  
+              
+                    <label class="mr-sm-2">Level </label>
+                    <select class="form-control" name="levelText" id="level">
+                        {% for level in levels %}
+                          <option value="{{ level.id }}">{{ level.std_level }}</option>
+                        {% endfor %}
+                    </select>
+                  </div>
+                  <div class="row">
+                    <div class="col-12">
+                      <div class="card">
+                        <div class="card-header">
+                          <h3 class="card-title">Attendance Report</h3>
+          
+                          <div class="card-tools">
+                            <label for="">Search By: Date, Level, Matric Number</label>
+                            <div class="input-group input-group-sm" style="width: 150px;">
+                              
+                              <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+          
+                              <div class="input-group-append">
+                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <!-- /.card-header -->
+                        <div class="card-body table-responsive p-0">
+                          <table class="table table-hover text-nowrap">
+                            <thead>
+                              <tr>
+                                <th>ID</th>
+                                <th>Student</th>
+                                <th>Matric Number</th>
+                                
+                                <th>Level</th>
+                                <th>Date</th>
+                                <th>Attendance Status</th>
+                                
+                              </tr>
+                            </thead>
+                            <tbody>
+                           {% for rep in attReport %}
+                              <tr>
+                                <td>{{ rep.id }}</td>
+                                <td>{{ rep.student_id.student.first_name }}</td>
+                                <td>{{ rep.student_id.matric_no }}</td>
+                                
+                                <td>{{ rep.student_id.level_id.std_level }}</td>
+                                <td>{{ rep.created_at }}</td>
+                                {% if rep.status %}
+                                <td class="text-success">Present</td>
+                                {% else %}
+                                <td class="text-danger">Absent</td>
+                                {% endif %}
+                                
+                              </tr>
+                           {% endfor %}
+                            </tbody>
+                          </table>
+                        </div>
+                        <!-- /.card-body -->
+                      </div>
+                      <!-- /.card -->
+                    </div>
+                  </div>
+                  <div class="form-group">
+                     <button type="button" class="btn btn-primary btn-block" id="fetch_attendance">Fetch Attendance</button>
+                   </div>
+                   <div class="form-group" id="attendance_block" style="display:none">
+                    <label>Attendance Date </label>
+                    <select class="form-control" name="attendance_date" id="attendance_date">
+
+                    </select>
+                  </div>
+                    <div class="form-group">
+                        <div class="alert alert-danger" id="error_attendance" style="display:none">
+
+                        </div>
+                    </div>
+                    <div class="form-group" id="fetch_student_block" style="display:none">
+                         <button type="button" class="btn btn-primary btn-block" id="fetch_student">Fetch Student Data</button>
+                     </div>
+                </div>
+                <!-- /.card-body -->
+
+
+                <div id="student_data" class="card-footer">
+
+                </div>
+            </div>
+            <!-- /.card -->
+
+
+
+          </div>
+          </div>
+      </div>
+    </section>
+    <!-- /.content -->
+{% endblock main_content %}
+{% block custom_js %}
+<script>
+    /*$(document).ready(function(){
+
+
+
+        $("#fetch_attendance").click(function(){
+               var course=$("#course").val();
+               var level=$("#level").val();
+
+            $.ajax({
+                    url:"",
+                    type:'POST',
+                    data:{courseText:course,levelText:level},
+                })
+                .done(function(response){
+                    var json_data=JSON.parse(response);
+                    console.log(json_data)
+                    if(json_data.length>0)
+                    {
+                        var html_data="";
+                        for(key in json_data)
+                        {
+                            html_data+="<option value="+json_data[key]["id"]+">"+json_data[key]["attendance_date"]+"</option>";
+                        }
+                        $("#error_attendance").html("");
+                        $("#error_attendance").hide();
+                        $("#attendance_block").show();
+                        $("#fetch_student_block").show();
+                        $("#attendance_date").html(html_data);
+                     }
+                     else
+                     {
+                        $("#error_attendance").html("No Attendance Data Found");
+                        $("#error_attendance").show();
+                        $("#attendance_block").hide();
+                        $("#fetch_student_block").hide();
+                        $("#attendance_date").html("");
+                     }
+                })
+                .fail(function(){
+                    alert("Error in Fetching Attendance")
+                    $("#error_attendance").html("");
+                    $("#attendance_block").hide();
+                    $("#fetch_student_block").hide();
+
+                });
+
+
+        })
+
+                    $("#fetch_student").click(function(){
+
+            var attendance_date=$("#attendance_date").val()
+
+            $.ajax({
+                url:"",
+                type:'POST',
+                data:{attendance_date:attendance_date},
+            })
+            .done(function(response){
+                var json_data=JSON.parse(response);
+                var div_data="<div class='form-group'><label>Student Attendance : </label></div><div class='form-group'><div class='row'>";
+                for(key in json_data)
+                {
+                    div_data+="<div class='col-lg-3'>";
+                    div_data+="<label class='form-check-label'>"+json_data[key]['name']+"</label> ";
+
+
+                    if(json_data[key]['status'])
+                    {
+                        div_data+="<b> [ Present ]</b>";
+                    }
+                    else{
+                        div_data+="<b> [ Absent ]</b>";
+                    }
+
+                    div_data+="</div>";
+                }
+                div_data+="</div></div>";
+
+                $("#student_data").html(div_data);
+
+            })
+            .fail(function(){
+                alert("Error in Fetching Student")
+            })
+
+            })
+        
+
+    })*/
+</script>
+{% endblock custom_js %}

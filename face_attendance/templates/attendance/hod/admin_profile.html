@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% include 'partials/sidebar.html' %}
+
+
+{% block page_title %}
+Edit Profile
+{% endblock page_title %}
+
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+          <div class="row">
+              <div class="col-md-12">
+            <!-- general form elements -->
+            <div class="card card-primary">
+              <div class="card-header">
+                <div class="row">
+                  <div class="col-6">
+                    <h3 class="card-title">Edit Profile</h3>
+                  </div>
+                  
+                </div>
+                
+              </div>
+              <!-- /.card-header -->
+              <!-- form start -->
+              <form role="form" action="{% url 'admin_profile' request.user.id %}" method="post">
+                  {% csrf_token %}
+                <div class="card-body">
+                  
+                  
+                  <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-control" name="username" value="{{ user.username }}">
+                  </div>
+                  <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-control" name="email" value="{{ user.email }}">
+                  </div>
+                  <div class="form-group">
+                    <label>Change Password?</label>
+                    <input type="password" class="form-control" name="password" placeholder="Fill Only If You want to Change Password">
+                  </div>
+                   
+                  </div>
+
+                  
+                   <div class="form-group">
+                      {% if messages %}
+                        {% for message in messages %}
+                        {% if message.tags == 'error' %}
+                        <div class="alert alert-danger" style="margin-top:10px">{{ message }}</div>
+                        {% endif %}
+                        {% if message.tags == 'success' %}
+                        <div class="alert alert-success" style="margin-top:10px">{{ message }}</div>
+                        {% endif %}
+                        {% endfor %}
+                      {% endif %}
+                    </div>
+
+                </div>
+                <!-- /.card-body -->
+
+                <div class="card-footer">
+                  <button type="submit" class="btn btn-primary btn-block">Save Profile</button>
+                </div>
+              </form>
+            </div>
+            <!-- /.card -->
+
+
+
+          </div>
+          </div>
+      </div>
+    </section>
+    <!-- /.content -->
+{% endblock main_content %}
+

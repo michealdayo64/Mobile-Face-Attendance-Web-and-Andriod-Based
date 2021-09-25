@@ -1,0 +1,74 @@
+{% extends 'attendance/lecturer/base.html' %}
+{% block page_title %}
+Manage Student
+{% endblock page_title %}
+{% block main_content %}
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+
+
+           <div class="row">
+          <div class="col-12">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title">Student Details</h3>
+
+                <div class="card-tools">
+                  <div class="input-group input-group-sm" style="width: 150px;">
+                    <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+
+                    <div class="input-group-append">
+                      <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                  <thead>
+                    <tr>
+                      <th>S/N</th>
+                      <th>Username</th>
+                      <th>First Name</th>
+                      <th>Last Name</th>
+                      <th>Matric Number</th>
+                      <th>Section</th>
+                     
+                      <th>Level</th>
+                      <th>Gender</th>
+                      <th>Profile Pic</th>
+                      
+                      
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for student in students %}
+                    <tr>
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ student.student.username }}</td>
+                      <td>{{ student.student.first_name }}</td>
+                      <td>{{ student.student.last_name }}</td>
+                      <td>{{ student.matric_no }}</td>
+                      <td>{{ student.session_year_id.session_start_year | date:"Y" }} - {{ student.session_year_id.session_end_year | date:"Y"  }}</td>
+                     
+                      <td>{{ student.level_id.std_level }}</td>
+                      <td>{{ student.sex }}</td>
+                      <td><img src="{{ student.photo_url|default_if_none:'#' }}" class="rounded" style="width:50px" class="img-circle elevation-2"/></td>
+                      
+                    </tr>
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /.content -->
+{% endblock main_content %}
+
