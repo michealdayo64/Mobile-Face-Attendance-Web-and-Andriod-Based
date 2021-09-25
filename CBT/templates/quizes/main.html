@@ -1,0 +1,55 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block scripts %}
+  <script src="{% static 'quizes/main.js' %}" defer></script>
+{% endblock %}
+
+{% block title %}
+Home
+{% endblock %}
+
+{% block content %}
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="quizStartModel" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+          
+        </div>
+        <div class="modal-body" id="modal-body-confirm">
+          
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal">No</button>
+          <button type="button" class="btn btn-success" id="start-button">Yes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="h1">Quiz List</div>
+  <hr>
+  {% for obj in quiz_data %}
+    <button
+    class="btn btn-link modal-button"
+    data-pk = "{{ obj.pk }}"
+    data-name = "{{ obj.name }}"
+    data-topic = "{{ obj.topic }}"
+    data-questions = "{{ obj.number_of_quesstions }}"
+    data-difficulty = "{{ obj.difficulty }}"
+    data-time = "{{ obj.time }}"
+    data-pass = "{{ obj.required_score_to_pass }}"
+    data-bs-toggle="modal" 
+    data-bs-target="#quizStartModel"
+    >
+    {{ obj.name }}
+    </button>
+  {% endfor %}
+{% endblock %}
